@@ -1,131 +1,151 @@
-# 🌌 RiftScope - Smart LoL Analyzer & Infrastructure
+# RiftScope - Intelligent Analytics Platform & Multi-Container Infrastructure
 
-🇺🇸 [English](#-riftscope---smart-lol-analyzer--infrastructure) | 🇧🇷 [Português](#-riftscope---analisador-inteligente-de-lol--infraestrutura)
+🌐 RIFT-INDEX: 🇺🇸 [English Documentation](#-english-documentation) | 🇧🇷 [Documentação em Português](#-documentação-em-português)
 
 ---
 
-## 🇺🇸 RiftScope - Smart LoL Analyzer & Infrastructure
+## 🇺🇸 English Documentation
 
-**RiftScope** is a high-performance FullStack Monorepo application (Node.js + React) engineered to consume, process, and analyze League of Legends data using the official Riot Games API. 
+### 1. Project Overview
+RiftScope is a production-grade, FullStack Monorepo platform designed to ingest, process, and evaluate high-throughput match data using the official Riot Games telemetry endpoints. Built using Node.js and React, the system processes raw historical structures to generate real-time gameplay metrics, behavioral patterns, and systemic heuristics. 
 
-Moving beyond a simple match history checker, this repository serves as a technical showcase for modern engineering practices, highlighting **DevOps, Containerization, Performance Tuning, Memory Caching, and Data Processing**.
+The core architecture functions as a technical demonstration of modern **DevOps paradigms, secure container virtualization, performance tuning, and scalable I/O optimization**.
 
-### 🛠️ Architecture & Engineering Decisions (DevOps Focus)
+### 2. Architecture & Systems Engineering
+- **Optimized Multi-Stage Builds (Docker):** Application components are separated into isolated compilation and execution runtime containers. By utilizing the modern `--omit=dev` layer optimization, development bloat is restricted from the production runtime, yielding highly compressed, lightweight Alpine-based images with minimal vulnerability surfaces.
+- **Reverse Proxy Routing Layer (Nginx):** The client application is compiled down to high-performance static distributions and served natively via Nginx. Nginx handles client-facing entry points, functioning as a Reverse Proxy that transparently pipes `/api` queries to the upstream Express container inside an isolated internal application network, effectively nullifying cross-origin resource sharing (CORS) constraints.
+- **In-Memory Volatile Cache Architecture (Redis):** To manage strict API rate limits imposed by upstream telemetry endpoints and mitigate `429 Too Many Requests` conditions, an ephemeral Redis key-value store was integrated. Complex relational data payloads are intercepted and handled at memory level, accelerating query execution times by up to 95%.
+- **Asynchronous Concurrent I/O Multiplexing (`Promise.all`):** To generate high-fidelity tactical profiles without triggering runtime process blocking, the backend concurrently schedules data aggregation routines for historical matches. This avoids common synchronous thread blocking and maintains deterministic response rates.
+- **Ecosystem Line Ending Stabilization (`.gitattributes`):** Forced file-system normalization to standard `LF` line terminations is compiled into the source repository. This mitigates system-specific character differences when executing files authored on Windows 10 within native Linux/Unix environments.
 
-- **Optimized Multi-Stage Builds (Docker):** The backend `Dockerfile` is split into isolated build and run stages. Leveraging the modern `--omit=dev` flag, the final Alpine Linux production image contains only the absolute minimum required dependencies, significantly shrinking both image size and attack surface.
-- **Reverse Proxying with Nginx:** The React frontend (powered by Vite) is compiled and served via an ultra-lightweight Nginx server. Nginx acts as a Reverse Proxy, intercepting `/api` requests and seamlessly routing them to the backend container inside the isolated Docker network, fully eliminating CORS issues.
-- **Intelligent Caching Layer (Redis):** To respect the strict rate-limiting policies applied by Riot Games and avoid `429 Too Many Requests` status codes, an in-memory Redis caching system was integrated. Complex upstream API payloads are cached and intercepted in milliseconds, safeguarding the infrastructure and improving response times by up to 95%.
-- **Parallel I/O Processing (`Promise.all`):** To generate advanced user reports (Option B), the backend fetches deep match details concurrently. This pattern bypasses sequential I/O blocking loops, maximizing CPU utilization and system throughput.
-- **Environment Standardization (`.gitattributes`):** Enforced line-endings normalization to `LF` (Linux format), guaranteeing bulletproof behavioral consistency between local Windows 10 code editing and remote Linux container executions.
+### 3. Core Engine Specifications
+- **Riot ID Domain Resolution:** Compliant with modern global alpha-numeric routing formats (`GameName#TagLine`).
+- **Telemetry Calculation Engine:** Real-time algorithmic weighting for rolling match calculations, outcome distribution, and customized performance ratios.
+- **Heuristic Gameplay Defect Analysis:** Custom data processing routines that evaluate game state sequences to identify persistent systemic mistakes (e.g., compounding death cascades, suboptimal item builds, low global map participation).
+- **Context-Aware Adaptive Engine:** Dynamically weights recent tactical behaviors to output optimal equipment loadouts and strategic champion options.
 
-### 🤖 Smart Analyzer Features (Option B)
-- **Riot ID Lookup:** Full compatibility with the contemporary `GameName#TagLine` player lookup standard.
-- **Advanced Performance Analytics:** Real-time calculation of overall win rates, recent performance, and weighted KDA ratios.
-- **Automated Gameplay Error Detection:** Heuristic-driven backend algorithms that scan recent player history to pinpoint critical gameplay structural flaws (e.g., overdeath flags, inefficient build paths, low map participation).
-- **Context-Aware Recommendations:** Automated item build structures and champion counter/synergy insights derived directly from recent match behavior.
+### 4. Continuous Integration & Delivery Specifications
+The automation infrastructure is controlled natively via **GitHub Actions** workflows (`.github/workflows/deploy.yml`):
+- **Continuous Integration (CI):** Triggers automatically on `push` or `pull_request` interactions directed at the `main` branch. It initializes an isolated cloud runtime, dynamically mounts node dependency cache structures to save time, performs a clean immutable dependency instantiation (`npm ci`), and tests build compilation validity.
+- **Continuous Delivery (CD Ready):** Post-validation hooks are structured for execution against downstream cloud computing distributions.
 
-### ⚙️ CI/CD Pipeline Automation
-The repository includes an automated workflow powered by **GitHub Actions** (`.github/workflows/deploy.yml`):
-- **Continuous Integration (CI):** Triggers on every `push` or `pull_request` to the `main` branch. It automatically spins up an isolated Ubuntu container, caches Node modules to optimize execution speed, installs dependencies cleanly with `npm ci`, and verifies build compilation integrity.
-- **Continuous Delivery (CD Ready):** Post-integration success, it triggers code delivery hooks structured for cloud environments.
-
-### 📁 Project Structure (Monorepo)
+### 5. Repository Topology
 ```text
 riftscope/
 ├── .github/workflows/
-│   └── deploy.yml          # GitHub Actions CI/CD Pipeline
+│   └── deploy.yml          # GitHub Actions CI/CD pipeline automation
 ├── backend/
 │   ├── src/
-│   │   ├── config/redis.js # Redis memory connection wrapper
-│   │   └── server.js       # Express server & Smart analytical logic
-│   ├── Dockerfile          # Multi-stage production container receipt
+│   │   ├── config/redis.js # Volatile cache layer infrastructure connection
+│   │   └── server.js       # Core Express infrastructure & Analytical routines
+│   ├── Dockerfile          # Production-grade multi-stage container manifest
 │   └── package.json
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx         # UI rendering & Match processing cards
-│   │   └── App.css         # Dark-themed dashboard styles
-│   └── Dockerfile          # Nginx production build & Reverse proxy router
-├── .env.example            # Environment variables placeholder blueprint
-├── .gitattributes          # LF line ending enforcement filter
-└── docker-compose.yml      # Local ecosystem multi-container orchestrator
-🚀 Running the Project Locally
+│   │   ├── App.jsx         # Telemetry rendering engine & Data card structures
+│   │   └── App.css         # Minimalist analytics dashboard layout rules
+│   └── Dockerfile          # Static distribution compilation & Nginx proxy config
+├── .env.example            # Environment token placeholder template blueprint
+├── .gitattributes          # Volatile line ending enforcement rules
+└── docker-compose.yml      # Multi-container orchestration specification
+6. Deployment & Execution Guide
 Prerequisites
-Docker Desktop installed and running.
+Docker Engine / Docker Desktop environment operational.
 
-Step-by-Step Guide
-Clone the repository:
+Step-by-Step Procedure
+Clone the master repository branch:
 
 Bash
-   git clone [https://github.com/seu-usuario/riftscope.git](https://github.com/seu-usuario/riftscope.git)
+   git clone [https://github.com/your-username/riftscope.git](https://github.com/your-username/riftscope.git)
    cd riftscope
-Configure your environment variables:
+Establish the environmental secrets layout:
 
-Duplicate the .env.example file and rename the copy to .env in the project root.
+Copy the distributed blueprint .env.example into a functional .env file in the project root.
 
-Insert your developer token retrieved from the Riot Developer Portal:
+Inject your active access token generated through the Riot Developer Portal:
 
 Plaintext
-     RIOT_API_KEY=RGAPI-YOUR-TOKEN-HERE
+     RIOT_API_KEY=RGAPI-YOUR-SECURE-TOKEN-STRING
      PORT=3000
      ```
-3. Boot up the entire interconnected infrastructure with a single command:
+3. Initialize the multi-container grid infrastructure using the compilation flag:
 ```bash
    docker compose up --build
-The application will be live and ready for production simulation in your browser at: http://localhost.
+The operational dashboard will run locally over standard HTTP network mappings at: http://localhost.
 
-🇧🇷 RiftScope - Analisador Inteligente de LoL & Infraestrutura
-O RiftScope é uma aplicação FullStack de alta performance desenvolvida em arquitetura de Monorepo (Node.js + React) projetada para consumir, processar e analisar dados analíticos de League of Legends utilizando a API oficial da Riot Games.
+🇧🇷 Documentação em Português
+1. Visão Geral do Projeto
+O RiftScope é uma plataforma FullStack (Monorepo) de alta performance projetada para ingestão, processamento e avaliação de dados históricos utilizando os endpoints oficiais da Riot Games. Desenvolvido em Node.js e React, o sistema analisa dados brutos para gerar métricas de desempenho em tempo real, comportamentos recorrentes e heurísticas de gameplay.
 
-Mais do que um buscador de histórico, o foco principal deste projeto é servir como vitrine técnica de engenharia, demonstrando práticas modernas de DevOps, Conteinerização, Otimização de Performance, Estrutura de Cache e Análise de Dados.
+A arquitetura do repositório funciona como uma demonstração técnica de engenharia, destacando práticas de DevOps, virtualização segura por containers, otimização de performance e cache corporativo.
 
-🛠️ Decisões de Arquitetura e Engenharia (Foco DevOps)
-Multi-Stage Builds Otimizados (Docker): O Dockerfile do backend foi estruturado em estágios separados de construção e execução. Utilizando a flag moderna --omit=dev, garantimos que a imagem final de produção (baseada em Alpine Linux) seja extremamente enxuta, contendo apenas o estritamente necessário para rodar, reduzindo o tamanho e a superfície de ataque.
+2. Arquitetura e Decisões de Engenharia
+Builds Otimizados Multi-Stage (Docker): Os componentes da aplicação são segregados em containers separados de compilação e execução. Através da otimização de camadas com a flag --omit=dev, dependências de desenvolvimento são completamente omitidas do ambiente produtivo, gerando imagens Alpine altamente compactas e com uma superfície de ataque reduzida.
 
-Camada de Proxy Reverso com Nginx: O frontend em React (Vite) é compilado e servido por um servidor Nginx ultra leve. O Nginx também atua como um Proxy Reverso, interceptando requisições para /api e redirecionando de forma transparente para o container do backend dentro da rede interna do Docker, eliminando problemas de CORS.
+Camada de Roteamento por Proxy Reverso (Nginx): A aplicação cliente é compilada em distribuições estáticas e servida nativamente via Nginx. O servidor gerencia os pontos de entrada, funcionando como um Proxy Reverso que redireciona de forma transparente chamadas para /api diretamente ao container do Express em uma rede isolada, eliminando restrições de CORS.
 
-Camada de Cache Inteligente com Redis: Para mitigar os limites rígidos de Rate Limit impostos pela API da Riot e evitar erros de 429 Too Many Requests, foi implementada uma camada de cache em memória utilizando o Redis. Dados de requisições complexas são cacheados e interceptados em milissegundos, poupando a infraestrutura e acelerando o tempo de resposta em até 95%.
+Cache Volátil em Memória (Redis): Para gerenciar limites de requisição (Rate Limits) e mitigar erros de HTTP 429 Too Many Requests, foi integrada uma camada de cache utilizando Redis. Payload complexos são interceptados e respondidos em milissegundos, poupando a infraestrutura de rede externa e acelerando o tempo de resposta em até 95%.
 
-Gargalos de I/O Resolvidos com Execução Paralela (Promise.all): Para estruturar as estatísticas avançadas (Opção B), o backend dispara as requisições de detalhes de múltiplas partidas simultaneamente em paralelo, evitando o travamento de I/O em loops síncronos e otimizando a CPU.
+Processamento de I/O Concorrente e Assíncrono (Promise.all): Para estruturar perfis táticos avançados sem causar travamento de processos, o backend agenda rotinas simultâneas para buscar dados de múltiplas partidas. Isso evita o bloqueio sínvrono de threads e mantém as taxas de resposta determinísticas.
 
-Padronização de Ambiente (.gitattributes): Configuração de fim de linha forçada para LF (Linux), garantindo consistência absoluta do código entre o desenvolvimento no Windows 10 e a execução dentro dos containers Linux/Nginx.
+Estabilização de Fim de Linha (.gitattributes): Configuração de normalização para o padrão LF (Linux) implementada diretamente nas diretrizes do Git, garantindo que arquivos modificados em ambiente Windows 10 operem sem quebras de sintaxe dentro dos containers Linux/Unix de produção.
 
-🤖 Recursos do Analisador Inteligente (Opção B)
-Busca via Riot ID: Suporte ao padrão atual de busca global por Nome#Tag.
+3. Especificações do Mecanismo de Análise
+Resolução de Domínio por Riot ID: Compatibilidade total com formatos de busca globais e alfanuméricos (Nome#Tag).
 
-Estatísticas Avançadas e Winrate: Cálculo em tempo real de taxas de vitória gerais, desempenho recente e taxas de KDA ponderadas.
+Cálculo de Telemetria Avançado: Algoritmos para consolidação e exibição em tempo real de taxas de vitória ponderadas e índices de KDA baseados no histórico.
 
-Análise de Gameplay Avançada: Algoritmos que varrem o histórico recente do jogador para detectar falhas críticas de gameplay (ex: excesso de mortes seguidas, build ineficiente, baixa participação no mapa).
+Detecção de Erros Críticos de Gameplay: Algoritmos heurísticos que avaliam o andamento das partidas para apontar falhas estruturais de gameplay (ex: excesso de abates concedidos, sequências de itens ineficientes e baixa participação nos objetivos do mapa).
 
-Sugestões de Adaptação: Recomendações automáticas de campeões e itens baseadas no comportamento recente do jogador.
+Mecanismo de Sugestão de Builds e Campeões: Avalia os dados recentes do jogador para recomendar caminhos de itens e alternativas táticas de campeões ideais.
 
-⚙️ Automação de Pipeline CI/CD
-O repositório inclui uma esteira automatizada gerenciada pelo GitHub Actions (.github/workflows/deploy.yml):
+4. Automação de Integração e Entrega Contínua
+A infraestrutura de automação é controlada através de workflows do GitHub Actions (.github/workflows/deploy.yml):
 
-Integração Contínua (CI): Disparado a cada push ou pull_request direcionado à branch main. Inicializa um container isolado Ubuntu na nuvem, faz o cacheamento dos módulos Node para otimizar a velocidade, instala as dependências de forma limpa via npm ci e valida a integridade de compilação dos builds.
+Integração Contínua (CI): Executado automaticamente a cada push ou pull_request enviado à branch main. Inicializa um ambiente isolado em nuvem, monta cache de dependências Node para otimizar o tempo de execução, instala pacotes de forma imutável com npm ci e valida a integridade da compilação do build.
 
-Entrega Contínua (CD Ready): Prontamente estruturado para disparar gatilhos e ganchos de deploy automatizados para ambientes em nuvem após o sucesso da integração.
+Entrega Contínua (CD Ready): Hooks de pós-validação estruturados para integração direta com provedores de computação em nuvem.
 
-🚀 Como Rodar o Projeto Localmente
+5. Topologia do Repositório
+Plaintext
+riftscope/
+├── .github/workflows/
+│   └── deploy.yml          # Automação de pipeline CI/CD do GitHub Actions
+├── backend/
+│   ├── src/
+│   │   ├── config/redis.js # Conexão com a infraestrutura de cache Redis
+│   │   └── server.js       # Servidor Express e rotas de processamento analítico
+│   ├── Dockerfile          # Manifesto multi-stage para container de produção
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx         # Renderização de interface e processamento de dados
+│   │   └── App.css         # Regras de estilo do painel analítico minimalista
+│   └── Dockerfile          # Compilação estática e configuração de proxy do Nginx
+├── .env.example            # Molde de variáveis de ambiente para credenciais
+├── .gitattributes          # Regras de padronização de caracteres invisíveis (LF)
+└── docker-compose.yml      # Especificação do orquestrador multi-container local
+6. Guia de Execução Local
 Pré-requisitos
-Docker Desktop instalado e rodando.
+Ambiente Docker Engine / Docker Desktop operacional.
 
-Passo a Passo
-Clone o repositório:
+Procedimento Passo a Passo
+Clone a branch principal do repositório:
 
 Bash
    git clone [https://github.com/seu-usuario/riftscope.git](https://github.com/seu-usuario/riftscope.git)
    cd riftscope
-Configure suas variáveis de ambiente:
+Configure as variáveis de ambiente:
 
-Copie o arquivo .env.example para um novo arquivo chamado .env na raiz do projeto.
+Duplique o arquivo .env.example salvando-o como .env na raiz do projeto.
 
-Insira sua chave de desenvolvedor gerada no Riot Developer Portal:
+Insira o token ativo gerado na sua área de desenvolvedor do Riot Developer Portal:
 
 Plaintext
-     RIOT_API_KEY=RGAPI-SEU-TOKEN-AQUI
+     RIOT_API_KEY=RGAPI-SUA-STRING-DE-TOKEN-AQUI
      PORT=3000
      ```
-3. Suba o ambiente completo integrado com um único comando:
+3. Inicialize a rede de containers e monte o ecossistema com a flag de compilação:
 ```bash
    docker compose up --build
-A aplicação estará disponível e pronta para uso em seu navegador através do endereço: http://localhost.
+O painel de monitoramento e análise estará acessível localmente no navegador através do endereço padrão: http://localhost.
