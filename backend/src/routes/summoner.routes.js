@@ -1,22 +1,26 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { generateSummoner } = require("../data/mockGenerator");
-const { getLatestVersion, profileIconUrl } = require("../utils/ddragon");
+const riotApi = require('../services/riotApi');
 
-// GET /api/summoner/:gameName/:tagLine
-router.get("/:gameName/:tagLine", async (req, res) => {
+router.get('/:gameName/:tagLine', async (req, res) => {
   try {
     const { gameName, tagLine } = req.params;
-    const summoner = generateSummoner(gameName, tagLine);
-    const version = await getLatestVersion();
-    res.json({
-      ...summoner,
-      profileIconUrl: profileIconUrl(version, summoner.profileIconId),
-      ddragonVersion: version,
-    });
+
+    const account = await riotApi.getAccountByRiotId(gameName, tagLine);
+    const summoner = await riotApi.getSummonerByPuuid(account.puuid, riotApi.DEFAULT_REGION);
+    const leagueEntries = await riotApi.getLeagueEntries(account.puuid, summoner.resolvedPlatform);
+    const result = await riotApi.decorateSummoner(account, summoner, leagueEntries);
+
+    res.json(result);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Falha ao carregar invocador" });
+    if (err.response?.status === 404) {
+      return res.status(404).json({ error: 'Invocador não encontrado' });
+    }
+    if (err.response?.status === 403) {
+      return res.status(403).json({ error: 'API key inválida ou expirada — gere uma nova no Developer Portal' });
+    }
+    console.error(err.message);
+    res.status(500).json({ error: 'Falha ao carregar invocador' });
   }
 });
 

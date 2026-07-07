@@ -1,64 +1,41 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const {
-  generateMatchHistory,
-  getMatchDetail,
-} = require("../data/mockGenerator");
-const {
-  getLatestVersion,
-  championIconUrl,
-  itemIconUrl,
-  spellIconUrl,
-  runeTreeIconUrl,
-} = require("../utils/ddragon");
+const riotApi = require('../services/riotApi');
 
-function decorateParticipant(version, p) {
-  return {
-    ...p,
-    championIconUrl: championIconUrl(version, p.championName),
-    itemUrls: p.items.map((id) => itemIconUrl(version, id)),
-    trinketUrl: itemIconUrl(version, p.trinket),
-    spellUrls: p.summonerSpells.map((s) => spellIconUrl(version, s)),
-    runeUrls: {
-      primary: runeTreeIconUrl(p.runes.primary),
-      secondary: runeTreeIconUrl(p.runes.secondary),
-    },
-  };
-}
-
-// GET /api/matches/history/:gameName/:tagLine?count=10
-router.get("/history/:gameName/:tagLine", async (req, res) => {
+router.get('/history/:gameName/:tagLine', async (req, res) => {
   try {
     const { gameName, tagLine } = req.params;
     const count = Math.min(parseInt(req.query.count) || 10, 20);
-    const version = await getLatestVersion();
-    const matches = generateMatchHistory(gameName, tagLine, count).map((m) =>
-      decorateParticipant(version, m),
-    );
+
+    const account = await riotApi.getAccountByRiotId(gameName, tagLine);
+    const matchIds = await riotApi.getMatchIdsByPuuid(account.puuid, count, riotApi.DEFAULT_REGION);
+
+    const matches = [];
+    for (const matchId of matchIds) {
+      const raw = await riotApi.getMatchById(matchId, riotApi.DEFAULT_REGION);
+      matches.push(await riotApi.decorateMatchHistory(raw, account.puuid));
+    }
     res.json(matches);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Falha ao carregar histórico" });
+    if (err.response?.status === 404) {
+      return res.status(404).json({ error: 'Invocador ou histórico não encontrado' });
+    }
+    console.error(err.message);
+    res.status(500).json({ error: 'Falha ao carregar histórico' });
   }
 });
 
-// GET /api/matches/detail/:matchId
-router.get("/detail/:matchId", async (req, res) => {
+router.get('/detail/:matchId', async (req, res) => {
   try {
-    const version = await getLatestVersion();
-    const match = getMatchDetail(req.params.matchId);
-    res.json({
-      ...match,
-      teams: match.teams.map((t) => ({
-        ...t,
-        participants: t.participants.map((p) =>
-          decorateParticipant(version, p),
-        ),
-      })),
-    });
+    const raw = await riotApi.getMatchById(req.params.matchId, riotApi.DEFAULT_REGION);
+    const result = await riotApi.decorateFullMatch(raw);
+    res.json(result);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Falha ao carregar detalhes da partida" });
+    if (err.response?.status === 404) {
+      return res.status(404).json({ error: 'Partida não encontrada' });
+    }
+    console.error(err.message);
+    res.status(500).json({ error: 'Falha ao carregar detalhes da partida' });
   }
 });
 
