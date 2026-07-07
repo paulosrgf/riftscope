@@ -1,17 +1,16 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import SummonerProfile from "./pages/SummonerProfile";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import SummonerProfile from './pages/SummonerProfile';
+import './App.css';
 
 function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route
-          path="/summoner/:gameName/:tagLine"
-          element={<SummonerProfile />}
-        />
+        <Route path="/summoner/:gameName/:tagLine" element={<SummonerProfile />} />
       </Routes>
     </BrowserRouter>
   );
