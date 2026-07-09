@@ -7,7 +7,26 @@ function Navbar() {
 
   return (
     <header className="rs-navbar">
-      <Link to="/" className="rs-navbar-logo">RiftScope</Link>
+      <div className="rs-navbar-left">
+        <Link to="/" className="rs-navbar-logo">
+          <span className="rs-navbar-mark" aria-hidden="true" />
+          RiftScope
+        </Link>
+        <nav className="rs-navbar-links">
+          <Link to="/" className={isHome ? 'rs-navbar-link rs-navbar-link--active' : 'rs-navbar-link'}>
+            Início
+          </Link>
+          <a>
+            href="https://github.com/paulosrgf"
+            target="_blank"
+            rel="noreferrer"
+            className="rs-navbar-link"
+          
+            Sobre
+          </a>
+        </nav>
+      </div>
+
       {!isHome && (
         <div className="rs-navbar-search">
           <SearchBar variant="compact" />
