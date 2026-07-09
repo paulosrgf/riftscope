@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { IconSearch } from './icons';
 
 function SearchBar({ variant = 'hero' }) {
   const [riotId, setRiotId] = useState('');
@@ -18,8 +19,8 @@ function SearchBar({ variant = 'hero' }) {
 
   return (
     <form onSubmit={handleSubmit} className={`rs-search rs-search--${variant}`}>
-      {variant === 'hero' && <div className="rs-search-arch" aria-hidden="true" />}
-      <div className="rs-search-field">
+      <div className="rs-search-shell">
+        <IconSearch className="rs-search-icon" />
         <input
           type="text"
           placeholder="NomeDoInvocador#TAG"
@@ -32,9 +33,7 @@ function SearchBar({ variant = 'hero' }) {
           {variant === 'hero' ? 'Invocar' : 'Ir'}
         </button>
       </div>
-      {touched && !isValid && (
-        <p className="rs-search-error">Digite no formato Nome#TAG</p>
-      )}
+      {touched && !isValid && <p className="rs-search-error">Digite no formato Nome#TAG</p>}
     </form>
   );
 }

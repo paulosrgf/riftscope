@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import ChainDivider from './ChainDivider';
 
 function Navbar() {
   const location = useLocation();
@@ -16,12 +17,7 @@ function Navbar() {
           <Link to="/" className={isHome ? 'rs-navbar-link rs-navbar-link--active' : 'rs-navbar-link'}>
             Início
           </Link>
-          <a>
-            href="https://github.com/paulosrgf"
-            target="_blank"
-            rel="noreferrer"
-            className="rs-navbar-link"
-          
+          <a href="https://github.com/paulosrgf" target="_blank" rel="noreferrer" className="rs-navbar-link">
             Sobre
           </a>
         </nav>
@@ -32,6 +28,8 @@ function Navbar() {
           <SearchBar variant="compact" />
         </div>
       )}
+
+      <ChainDivider className="rs-navbar-chain" />
     </header>
   );
 }

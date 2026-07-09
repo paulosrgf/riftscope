@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { fetchMatchDetail } from "../services/api";
-import MatchDetail from "./MatchDetail";
+import { useState } from 'react';
+import { fetchMatchDetail } from '../services/api';
+import MatchDetail from './MatchDetail';
+import { IconChevron } from './icons';
+import { timeAgo, formatDuration } from '../utils/format';
 
 function MatchRow({ match, onSummonerClick }) {
   const [expanded, setExpanded] = useState(false);
@@ -21,60 +23,55 @@ function MatchRow({ match, onSummonerClick }) {
     setExpanded((e) => !e);
   }
 
-  const kda =
-    match.deaths === 0
-      ? "Perfect"
-      : ((match.kills + match.assists) / match.deaths).toFixed(2);
+  const kda = match.deaths === 0 ? 'Perfect' : ((match.kills + match.assists) / match.deaths).toFixed(2);
 
   return (
-    <div className={`rs-match-row ${match.win ? "rs-win" : "rs-loss"}`}>
-      <div className="rs-match-summary" onClick={toggle}>
-        <img
-          src={match.championIconUrl}
-          alt={match.championName}
-          className="rs-champ-icon"
-        />
-        <div className="rs-match-spells-runes">
-          <div className="rs-spell-row">
-            {match.spellUrls.map((url, i) => (
-              <img key={i} src={url} alt="feitiço" className="rs-mini-icon" />
-            ))}
+    <div className={`rs-match-card ${match.win ? 'rs-win' : 'rs-loss'} ${expanded ? 'rs-match-card--open' : ''}`}>
+      <button className="rs-match-summary" onClick={toggle}>
+        <div className="rs-match-result-strip">
+          <span className="rs-match-result-text">{match.win ? 'Vitória' : 'Derrota'}</span>
+          <span className="rs-match-meta">{match.gameMode}</span>
+          <span className="rs-match-meta">{timeAgo(match.gameCreation)}</span>
+          <span className="rs-match-meta">{formatDuration(match.gameDuration)}</span>
+        </div>
+
+        <div className="rs-match-champ-block">
+          <img src={match.championIconUrl} alt={match.championName} className="rs-champ-icon" />
+          <div className="rs-match-spells-runes">
+            <div className="rs-spell-col">
+              {match.spellUrls.map((url, i) => <img key={i} src={url} alt="feitiço" className="rs-mini-icon" />)}
+            </div>
+            <img src={match.runeUrls.primary} alt="runa primária" className="rs-mini-icon" />
           </div>
-          <img
-            src={match.runeUrls.primary}
-            alt="runa primária"
-            className="rs-mini-icon"
-          />
         </div>
-        <div className="rs-match-kda">
-          <strong>
-            {match.kills}/{match.deaths}/{match.assists}
-          </strong>
-          <span>KDA {kda}</span>
+
+        <div className="rs-match-kda-block">
+          <strong className="rs-match-kda-nums">{match.kills}/{match.deaths}/{match.assists}</strong>
+          <span className="rs-match-kda-ratio">{kda} KDA</span>
         </div>
+
+        <div className="rs-match-quickstats">
+          <div><span className="rs-qs-value">{match.cs}</span><span className="rs-qs-label">CS</span></div>
+          <div><span className="rs-qs-value">{(match.goldEarned / 1000).toFixed(1)}k</span><span className="rs-qs-label">Ouro</span></div>
+        </div>
+
         <div className="rs-match-items">
           {match.itemUrls.map((url, i) =>
-            url ? (
-              <img key={i} src={url} alt="item" className="rs-item-icon" />
-            ) : (
-              <div key={i} className="rs-item-empty" />
-            ),
+            url ? <img key={i} src={url} alt="item" className="rs-item-icon" /> : <div key={i} className="rs-item-empty" />
           )}
-          <img src={match.trinketUrl} alt="trinket" className="rs-item-icon" />
+          <img src={match.trinketUrl} alt="trinket" className="rs-item-icon rs-item-trinket" />
         </div>
-        <div className="rs-match-result">
-          {match.win ? "Vitória" : "Derrota"}
-        </div>
-      </div>
 
-      {expanded &&
-        (loadingDetail ? (
-          <div className="rs-loading">carregando partida...</div>
-        ) : (
-          detail && (
-            <MatchDetail detail={detail} onSummonerClick={onSummonerClick} />
-          )
-        ))}
+        <IconChevron className="rs-match-chevron" />
+      </button>
+
+      {expanded && (
+        <div className="rs-match-detail-wrap">
+          {loadingDetail
+            ? <div className="rs-loading">carregando partida...</div>
+            : detail && <MatchDetail detail={detail} onSummonerClick={onSummonerClick} />}
+        </div>
+      )}
     </div>
   );
 }
