@@ -211,3 +211,250 @@ a { color: inherit; text-decoration: none; }
   .rs-navbar-search { width: 160px; }
   .rs-search--hero { width: 100%; }
 }
+
+/* ---- Layout shell (header + main + footer grudado embaixo) ---- */
+.rs-app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.rs-app-main { flex: 1; }
+
+/* ---- Navbar reforçada ---- */
+.rs-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 72px;
+  border-bottom: 1px solid var(--rs-iron);
+  background: var(--rs-void);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.rs-navbar-left { display: flex; align-items: center; gap: 2.5rem; }
+
+.rs-navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  color: var(--rs-bone);
+}
+
+.rs-navbar-mark {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--rs-oxide);
+  box-shadow: 0 0 10px rgba(107, 31, 42, 0.8);
+}
+
+.rs-navbar-links { display: flex; gap: 1.5rem; }
+
+.rs-navbar-link {
+  font-size: 0.85rem;
+  color: var(--rs-bone-dim);
+  letter-spacing: 0.03em;
+  transition: color 0.15s ease;
+}
+
+.rs-navbar-link:hover { color: var(--rs-bone); }
+.rs-navbar-link--active { color: var(--rs-bone); border-bottom: 2px solid var(--rs-oxide); padding-bottom: 4px; }
+
+.rs-navbar-search { width: 300px; }
+
+/* ---- Footer ---- */
+.rs-footer {
+  border-top: 1px solid var(--rs-iron);
+  background: var(--rs-aubergine);
+  padding: 2rem;
+  margin-top: 3rem;
+}
+
+.rs-footer-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rs-footer-brand {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  color: var(--rs-bone);
+  letter-spacing: 0.06em;
+}
+
+.rs-footer-text {
+  font-size: 0.75rem;
+  color: var(--rs-bone-dim);
+  line-height: 1.5;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.rs-footer-links { font-size: 0.8rem; }
+.rs-footer-links a { color: var(--rs-bone-dim); }
+.rs-footer-links a:hover { color: var(--rs-accent); }
+.rs-footer-dot { margin: 0 0.5rem; color: var(--rs-iron); }
+
+/* ---- Scoreboard (estilo tracker.gg) ---- */
+.rs-match-detail {
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rs-sb-team {
+  background: var(--rs-aubergine);
+  border: 1px solid var(--rs-iron);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.rs-sb-team-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.rs-sb-team-header--win { background: rgba(91, 58, 122, 0.35); color: var(--rs-bone); }
+.rs-sb-team-header--loss { background: rgba(107, 31, 42, 0.35); color: var(--rs-bone); }
+
+.rs-sb-column-labels,
+.rs-scoreboard-row {
+  display: grid;
+  grid-template-columns: 96px 1.4fr 90px 60px 90px 70px 150px;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+}
+
+.rs-sb-column-labels {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--rs-bone-dim);
+  border-bottom: 1px solid var(--rs-iron);
+  padding-bottom: 0.5rem;
+}
+
+.rs-scoreboard-row {
+  border-top: 1px solid rgba(58, 50, 66, 0.5);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+}
+
+.rs-scoreboard-row--me {
+  background: rgba(91, 58, 122, 0.15);
+  box-shadow: inset 3px 0 0 var(--rs-wraith);
+}
+
+.rs-sb-champion { display: flex; align-items: center; gap: 0.5rem; }
+.rs-sb-champ-wrap { position: relative; }
+
+.rs-sb-champ-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--rs-iron);
+}
+
+.rs-sb-champ-level {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: var(--rs-void);
+  border: 1px solid var(--rs-iron);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rs-bone);
+}
+
+.rs-sb-spells-runes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+}
+
+.rs-sb-mini {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px solid var(--rs-iron);
+  background: var(--rs-void);
+}
+
+.rs-sb-player {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.rs-sb-player-name { color: var(--rs-bone); font-size: 0.9rem; }
+.rs-sb-player-tag { color: var(--rs-bone-dim); font-size: 0.7rem; }
+.rs-sb-player:hover .rs-sb-player-name { color: var(--rs-accent); text-decoration: underline; }
+
+.rs-sb-kda { display: flex; flex-direction: column; }
+.rs-sb-kda-nums { font-weight: 500; }
+.rs-sb-kda-ratio { font-size: 0.7rem; color: var(--rs-bone-dim); }
+
+.rs-kda-good .rs-sb-kda-nums { color: #7ed957; }
+.rs-kda-avg .rs-sb-kda-nums { color: var(--rs-bone); }
+.rs-kda-bad .rs-sb-kda-nums { color: #e0627a; }
+
+.rs-sb-stat { display: flex; flex-direction: column; align-items: flex-start; }
+.rs-sb-stat-value { color: var(--rs-bone); }
+.rs-sb-stat-label { font-size: 0.65rem; color: var(--rs-bone-dim); text-transform: uppercase; }
+
+.rs-sb-items { display: flex; gap: 3px; }
+.rs-sb-item, .rs-sb-item-empty {
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+  border: 1px solid var(--rs-iron);
+  background: var(--rs-void);
+}
+.rs-sb-item-empty { background: rgba(255,255,255,0.03); }
+.rs-sb-trinket { border-color: var(--rs-wraith); }
+
+/* ---- Responsivo: scoreboard vira lista simplificada no mobile ---- */
+@media (max-width: 720px) {
+  .rs-sb-column-labels { display: none; }
+  .rs-scoreboard-row {
+    grid-template-columns: 60px 1fr;
+    grid-template-areas:
+      "champ player"
+      "champ kda"
+      "items items";
+    row-gap: 0.3rem;
+  }
+  .rs-sb-champion { grid-area: champ; }
+  .rs-sb-player { grid-area: player; }
+  .rs-sb-kda { grid-area: kda; }
+  .rs-sb-stat { display: none; }
+  .rs-sb-items { grid-area: items; }
+}
