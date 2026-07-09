@@ -53,7 +53,7 @@ class RateLimiter {
           reject(err);
         }
       }
-    }
+    }   
     this.processing = false;
   }
 }
