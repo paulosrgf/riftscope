@@ -1,20 +1,23 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { IconSearch } from './icons';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { IconSearch } from "./icons";
 
-function SearchBar({ variant = 'hero' }) {
-  const [riotId, setRiotId] = useState('');
+function SearchBar({ variant = "hero", game = "lol" }) {
+  const [riotId, setRiotId] = useState("");
   const [touched, setTouched] = useState(false);
   const navigate = useNavigate();
 
-  const [gameNamePart, tagPart] = riotId.split('#');
+  const [gameNamePart, tagPart] = riotId.split("#");
   const isValid = gameNamePart?.trim() && tagPart?.trim();
 
   function handleSubmit(e) {
     e.preventDefault();
     setTouched(true);
     if (!isValid) return;
-    navigate(`/summoner/${encodeURIComponent(gameNamePart.trim())}/${encodeURIComponent(tagPart.trim())}`);
+    const base = game === "valorant" ? "/valorant/player" : "/summoner";
+    navigate(
+      `${base}/${encodeURIComponent(gameNamePart.trim())}/${encodeURIComponent(tagPart.trim())}`,
+    );
   }
 
   return (
@@ -23,17 +26,19 @@ function SearchBar({ variant = 'hero' }) {
         <IconSearch className="rs-search-icon" />
         <input
           type="text"
-          placeholder="NomeDoInvocador#TAG"
+          placeholder="NomeDoJogador#TAG"
           value={riotId}
           onChange={(e) => setRiotId(e.target.value)}
           className="rs-search-input"
-          aria-label="Buscar invocador pelo Riot ID"
+          aria-label="Buscar jogador pelo Riot ID"
         />
         <button type="submit" className="rs-search-btn">
-          {variant === 'hero' ? 'Invocar' : 'Ir'}
+          {variant === "hero" ? "Invocar" : "Ir"}
         </button>
       </div>
-      {touched && !isValid && <p className="rs-search-error">Digite no formato Nome#TAG</p>}
+      {touched && !isValid && (
+        <p className="rs-search-error">Digite no formato Nome#TAG</p>
+      )}
     </form>
   );
 }

@@ -1,10 +1,11 @@
-import { Link, useLocation } from 'react-router-dom';
-import SearchBar from './SearchBar';
-import ChainDivider from './ChainDivider';
+import { Link, useLocation } from "react-router-dom";
+import SearchBar from "./SearchBar";
+import ChainDivider from "./ChainDivider";
 
 function Navbar() {
   const location = useLocation();
-  const isHome = location.pathname === '/';
+  const isValorant = location.pathname.startsWith("/valorant");
+  const isHome = location.pathname === "/" || location.pathname === "/valorant";
 
   return (
     <header className="rs-navbar">
@@ -14,10 +15,32 @@ function Navbar() {
           RiftScope
         </Link>
         <nav className="rs-navbar-links">
-          <Link to="/" className={isHome ? 'rs-navbar-link rs-navbar-link--active' : 'rs-navbar-link'}>
-            Início
+          <Link
+            to="/"
+            className={
+              !isValorant
+                ? "rs-navbar-link rs-navbar-link--active"
+                : "rs-navbar-link"
+            }
+          >
+            League
           </Link>
-          <a href="https://github.com/paulosrgf" target="_blank" rel="noreferrer" className="rs-navbar-link">
+          <Link
+            to="/valorant"
+            className={
+              isValorant
+                ? "rs-navbar-link rs-navbar-link--active"
+                : "rs-navbar-link"
+            }
+          >
+            Valorant
+          </Link>
+          <a
+            href="https://github.com/paulosrgf"
+            target="_blank"
+            rel="noreferrer"
+            className="rs-navbar-link"
+          >
             Sobre
           </a>
         </nav>
@@ -25,7 +48,7 @@ function Navbar() {
 
       {!isHome && (
         <div className="rs-navbar-search">
-          <SearchBar variant="compact" />
+          <SearchBar variant="compact" game={isValorant ? "valorant" : "lol"} />
         </div>
       )}
 
